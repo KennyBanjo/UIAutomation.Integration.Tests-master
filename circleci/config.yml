@@ -1,0 +1,15 @@
+version: 2.1 # Use version 2.1 to enable orb usage.
+
+orbs:
+  win: circleci/windows@2.2.0 # The Windows orb give you everything you need to start using the Windows executor.
+
+jobs:
+  build:
+    docker:
+       - image: mcr.microsoft.com/dotnet/nightly/sdk:3.1
+    steps:
+      # Commands are run in a Windows virtual machine environment
+      - checkout
+      - run: dotnet restore
+      - run: dotnet build 
+      - run: dotnet test

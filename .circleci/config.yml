@@ -1,0 +1,89 @@
+version: 2.1 # Use version 2.1 to enable orb usage.
+
+
+sanity: &sanity
+  - sanity
+regression: &regression
+  - regression
+executors:
+  default:
+    docker:
+      - image: kennybanjo/dotnet-chrome:latest
+        auth:
+           username: $DockerUsername
+           password: $DockerPassword
+jobs:
+  sanity:
+    executor: default
+    working_directory: /circleci
+    steps:
+      # Commands are run in a Windows virtual machine environment
+      - checkout
+      - run: 
+          name: "Restore"
+          command: dotnet restore
+          
+      - run:
+          name: "Build"
+          command: dotnet build 
+          
+      - run: 
+          name: "Run Tests"
+          command: dotnet test -v n --filter TestCategory=sanity --logger "junit;LogFilePath=TestResults/TestResult.xml" 
+          no_output_timeout: 20m
+          
+      - store_artifacts:
+          path: UIAutomation.Integration.Tests/TestResults
+          
+      - store_test_results:
+          path: UIAutomation.Integration.Tests/TestResults
+          
+      - run: 
+          name: Send test results to xray
+          command: |
+              curl -H "Content-Type: multipart/form-data" -u $JiraUsername:$JiraToken --form-string "file=@circleci/UIAutomation.Integration.Tests/TestResult/TestResult.xml" "$JiraUrl/rest/raven/1.0/import/execution/nunit?projectKey=QAR-7811"
+      
+  regression:
+    executor: default
+    working_directory: /circleci
+    steps:
+      # Commands are run in a Windows virtual machine environment
+      - checkout
+      - run: 
+          name: "Restore"
+          command: dotnet restore
+          
+      - run:
+          name: "Build"
+          command: dotnet build 
+          
+      - run: 
+          name: "Run Tests"
+          command: dotnet test -v n --logger "junit;LogFilePath=TestResults/TestResult.xml" 
+          no_output_timeout: 20m
+          
+      - store_artifacts:
+          path: UIAutomation.Integration.Tests/TestResults
+          
+      - store_test_results:
+          path: UIAutomation.Integration.Tests/TestResults
+          
+      - run: 
+          name: Send test results to xray
+          command: |
+              curl -H "Content-Type: multipart/form-data" -u $JiraUsername:$JiraToken --form-string "file=@circleci/UIAutomation.Integration.Tests/TestResult/TestResult.xml" "$JiraUrl/rest/raven/1.0/import/execution/nunit?projectKey=QAR-7811"
+  
+workflows:
+  sanity:
+    jobs:
+      *sanity
+  nightly-regression:
+    jobs:
+      *regression
+    triggers:
+      - schedule:
+          cron: "00 23 * * *"
+          filters:
+            branches:
+              only:
+                - master
