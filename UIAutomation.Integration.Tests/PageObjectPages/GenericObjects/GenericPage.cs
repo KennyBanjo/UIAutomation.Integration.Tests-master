@@ -119,6 +119,12 @@ namespace Integration.UIAutomation.Tests.PageObjectPages.GenericObjects
                                                      $"@value='{elementName}']");
             return GenericWindowButton;
         }
+
+       public Button GetButtonByLinkText(string elementName)
+       {
+           GenericWindowButton.ByLocator = By.LinkText($"{elementName}");
+           return GenericWindowButton;
+       }
         /// <summary>
         /// Get button by xpath where only the text forms the xpath
         /// </summary>

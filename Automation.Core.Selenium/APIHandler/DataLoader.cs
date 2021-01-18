@@ -9,6 +9,7 @@ using Automation.Core.Selenium.APIHandler.JsonAccounts;
 using Automation.Core.Selenium.APIHandler.Model;
 using Automation.Core.Selenium.Base;
 using Automation.Core.Selenium.Config;
+using Automation.Core.Selenium.HelperClass;
 using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -43,9 +44,8 @@ namespace Automation.Core.Selenium.APIHandler
             }
             else
             {
-                Console.WriteLine("Call failed" + " " + response.StatusCode);
-                Console.WriteLine("Job content" + " " + response.Content);
-                logger.Error("Call not made");
+                LogHelper.Info("Job content" + " " + response.Content);
+                LogHelper.Error("Call failed" + " " + response.StatusCode );
             }
         }
 
@@ -58,8 +58,8 @@ namespace Automation.Core.Selenium.APIHandler
             request.AddHeader("Authorization", restClientHelper.bearer_token);
             //request.AddHeader("Cookie", "BrowserId=NFK9nB9ZEeuEzAcLDJa4FQ");
             IRestResponse response = client.Execute(request);
-            Console.WriteLine(response.Content);
-            Console.WriteLine(response.StatusCode);
+            LogHelper.Info(response.Content);
+            LogHelper.Info(Convert.ToString(response.StatusCode));
         }
 
         public static void DeletePortalApplications()
@@ -71,8 +71,8 @@ namespace Automation.Core.Selenium.APIHandler
             request.AddHeader("Authorization", restClientHelper.bearer_token);
             //request.AddHeader("Cookie", "BrowserId=NFK9nB9ZEeuEzAcLDJa4FQ");
             IRestResponse response = client.Execute(request);
-            Console.WriteLine(response.Content);
-            Console.WriteLine(response.StatusCode);
+            LogHelper.Info(response.Content);
+            LogHelper.Info(Convert.ToString(response.StatusCode));
         }
     }
 }

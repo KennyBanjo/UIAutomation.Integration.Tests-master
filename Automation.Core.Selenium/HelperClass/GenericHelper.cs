@@ -11,7 +11,7 @@ using log4net;
 using OpenQA.Selenium;
 
 
-namespace Automation.Core.Selenium.ComponentHelper
+namespace Automation.Core.Selenium.HelperClass
 {
     public class GenericHelper:BasePage
     {

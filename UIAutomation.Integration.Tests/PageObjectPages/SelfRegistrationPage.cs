@@ -1,6 +1,6 @@
 ﻿
 using Automation.Core.Selenium.Base;
-using Automation.Core.Selenium.ComponentHelper;
+using Automation.Core.Selenium.HelperClass;
 using Automation.Core.Selenium.ExtensionMethods;
 using Integration.UIAutomation.Tests.PageObjectPages.GenericObjects;
 using Integration.UIAutomation.Tests.TableEntities;

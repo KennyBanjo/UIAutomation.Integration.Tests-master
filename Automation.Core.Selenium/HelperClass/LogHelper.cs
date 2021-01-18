@@ -3,7 +3,7 @@ using System.IO;
 using Automation.Core.Selenium.Config;
 using TechTalk.SpecFlow;
 
-namespace Automation.Core.Selenium.ComponentHelper
+namespace Automation.Core.Selenium.HelperClass
 {
     [Binding]
     public class LogHelper

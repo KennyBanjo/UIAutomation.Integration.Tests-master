@@ -9,7 +9,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using ExpectedConditions = SeleniumExtras.WaitHelpers.ExpectedConditions;
 
-namespace Automation.Core.Selenium.ComponentHelper
+namespace Automation.Core.Selenium.HelperClass
 {
     public class ComboBoxHelper:BasePage
     {

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Automation.Core.Selenium.APIHandler;
 using Automation.Core.Selenium.Base;
-using Automation.Core.Selenium.ComponentHelper;
+using Automation.Core.Selenium.HelperClass;
 using Automation.Core.Selenium.WebDriver;
 using AventStack.ExtentReports;
 using AventStack.ExtentReports.Gherkin.Model;
@@ -20,6 +20,7 @@ using log4net;
 using log4net.Config;
 using NUnit.Framework.Internal;
 using TechTalk.SpecFlow;
+using UIAutomation.Integration.Tests.StepDefinitions;
 using ExtentReports = AventStack.ExtentReports.ExtentReports;
 
 namespace Integration.UIAutomation.Tests.Hooks
@@ -45,21 +46,18 @@ namespace Integration.UIAutomation.Tests.Hooks
         }
 
         [BeforeTestRun]
-        public static void CreatLogFile()
+        public static void CreateLogFile()
         {
             LogHelper.CreateLogFile();
         }
 
         [BeforeScenario]
-        public void OutputScenario(FeatureContext featureContext, ScenarioContext scennarioContext)
+        public void OutputScenario(FeatureContext featureContext, ScenarioContext scenarioContext)
         {
             LogHelper.Info(" " + "--------[BeforeScenario]---------");
-            LogHelper.Info($" " + "Feature: {featureContext.FeatureInfo.Title}");
-            LogHelper.Info($" " + "Scenario: {scennarioContext.ScenarioInfo.Title}");
+            LogHelper.Info(" " + $"Feature: {featureContext.FeatureInfo.Title}");
+            LogHelper.Info(" " + $"Scenario: {scenarioContext.ScenarioInfo.Title}");
 
-            //Console.Out.WriteLine("Feature: " + _featureContext.FeatureInfo.Title);
-            //Console.Out.WriteLine(_featureContext.FeatureInfo.Description);
-            //Console.Out.WriteLine("Scenario: " + _scenarioContext.ScenarioInfo.Title);
         }
 
         /// <summary>
@@ -133,18 +131,16 @@ namespace Integration.UIAutomation.Tests.Hooks
         [BeforeScenario(@"regression")]
         public void OpenBrowser()
         {
-           
-            //_logger.Info("Opening browser");
-            BrowserHooks.OpenBrowser(Browser.BrowserType.Chrome);
+            
+            BrowserHooks.OpenBrowser(Browser.BrowserType.ChromeHeadless);
             LogHelper.Info(" " + "Browser opened");
-            //_logger.Info("Broswer Opened");
         }
 
         public void CreateNode<T>() where T : IGherkinFormatterModel
         {
             if (_scenarioContext.TestError != null)
             {
-                string name = @"/circleci/UIAutomation.Integration.Tests/TestResults/" + _scenarioContext.ScenarioInfo.Title.Replace(" ", "") +
+                string name = @"/circleci/UIAutomation.Integration.Tests/TestResults" + _scenarioContext.ScenarioInfo.Title.Replace(" ", "") +
                              ".png";
                 GenericHelper.TakeScreenShot(name);
                 _scenario.CreateNode<T>(_scenarioContext.StepContext.StepInfo.Text).Fail(
@@ -161,21 +157,28 @@ namespace Integration.UIAutomation.Tests.Hooks
             }
         }
 
-        [AfterScenario]
-        public static void AfterScenario(ScenarioContext scenarioContext)
+        [AfterScenario(@"regression")]
+        public static void KillWebdriver(ScenarioContext scenarioContext)
         {
             LogHelper.Info("[AfterScenario] killing driver");
             if (_scenarioContext.TestError != null)
-            {
+            { 
                 string name = _scenarioContext.ScenarioInfo.Title.Replace(" ", "") + ".png";
                GenericHelper.TakeScreenShot(name);
                LogHelper.Error(_scenarioContext.TestError.Message);
+               //LogOut();
             }
+        }
+
+        private static void LogOut()
+        {
+            HomePageSteps.WhenIClickTheProfileAndLogoutFromTheSite();
         }
 
         [AfterScenario(@"regression")]
         public void CloseBrowser()
         {
+            //LogOut();
             Thread.Sleep(5000);
             DriverContext.WebDriver.Quit();
         }

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using Automation.Core.Selenium.ComponentHelper;
+using Automation.Core.Selenium.HelperClass;
 using TechTalk.SpecFlow;
 
 namespace UIAutomation.Integration.Tests.Hooks

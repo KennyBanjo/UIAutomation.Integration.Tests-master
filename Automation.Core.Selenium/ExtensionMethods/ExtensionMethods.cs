@@ -7,6 +7,7 @@ using Automation.Core.Selenium.Base;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
+
 namespace Automation.Core.Selenium.ExtensionMethods
 {
     public static class ExtensionMethods
@@ -21,11 +22,17 @@ namespace Automation.Core.Selenium.ExtensionMethods
             wait.Until(ElementIsVisible(element));
         }
 
-        public static void SelectElement(this IWebElement element, int index)
+        public static void SelectByIndex(this IWebElement element, int index)
         {
             element.WaitUntilElementVisible();
             var select = new SelectElement(element);
             select.SelectByIndex(index);
+        }
+
+        public static void SelectByText(this IWebElement element, string text)
+        {
+            var select = new SelectElement(element);
+            select.SelectByText(text);
         }
 
         public static Func<IWebDriver, bool> ElementIsVisible(IWebElement element)
@@ -74,5 +81,12 @@ namespace Automation.Core.Selenium.ExtensionMethods
             element.Clear();
             element.SendKeys(text);
         }
+
+        public static void ClearText(this IWebElement element, string text)
+        {
+           element.Clear();
+        }
+
+
     }
 }
